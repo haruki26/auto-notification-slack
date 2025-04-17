@@ -1,0 +1,23 @@
+{
+    "name": "Auto Notifier Slack",
+    "description": "アクセスしたURLをSlackに通知する",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "host_permissions": [
+        "https://hooks.slack.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "permissions": [
+        "tabs", "scripting"
+    ],
+    "content_scripts": [
+        {
+            "run_at":"document_end",
+            "matches": ["<all_urls>"],
+            "js": ["contentScript.js"]
+        }
+    ]
+}
