@@ -22,14 +22,28 @@ function notify_slack(url) {
     };
 }
 
+function isNotInDenyList(url) {
+    const denyList = config.denyList;
+    if (!denyList) return true;
+
+    for (const item of denyList) {
+        if (url.includes(item)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     chrome.tabs.query({ active: true, currentWindow: true })
         .then(activeTab => {  
             switch (msg.name) {
                 case 'confirm':
-                    sendResponse({
-                        url: activeTab[0].url,
-                    })
+                    const url = activeTab[0].url;
+                    if (isNotInDenyList(url)) {
+                        sendResponse({ url: url });
+                        return;
+                    }
                     break;
                 case 'notify_slack':
                     notify_slack(msg.url);
