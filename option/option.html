@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>設定画面</title>
+    <link rel="stylesheet" href="option.css">
+</head>
+<body>
+    <h2>Slack通知 拡張 設定</h2>
+    <div>
+        <label for="webhookUrl">Webhook URL：</label>
+        <input type="text" id="webhookUrl" placeholder="SlackのWebhook URLを入力してください">
+        <button id="saveWebhook">保存</button>
+    </div>
+    <div class="deny-list">
+        <label>通知除外リスト：</label>
+        <div id="denyList"></div>
+        <div class="add-row">
+            <input type="text" id="denyInput" placeholder="除外したいURLやドメインを入力">
+            <button id="addDeny">追加</button>
+        </div>
+    </div>
+    <script src="option.js"></script>
+</body>
+</html>

@@ -11,8 +11,9 @@
         "type": "module"
     },
     "permissions": [
-        "tabs", "scripting"
+        "tabs", "scripting", "storage"
     ],
+    "options_page": "option/option.html",
     "content_scripts": [
         {
             "run_at":"document_end",
