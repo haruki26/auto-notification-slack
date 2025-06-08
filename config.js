@@ -1,6 +1,15 @@
+const _loadConfig = async (key) => {
+    return new Promise((resolve) => {
+        chrome.storage && chrome.storage.local.get(key, (result) => {
+            resolve(result[key]);
+        });
+    });
+}
+
+const loadWebHookUrl = async () =>  await _loadConfig('webHookUrl');
+const loadDenyList = async () =>  await _loadConfig('denyList');
+
 export const config = {
-    webHookUrl: "your_webhook_url",
-    denyList: [
-        "example.com",
-    ],
-};
+    webHookUrl: loadWebHookUrl,
+    denyList: loadDenyList,
+}

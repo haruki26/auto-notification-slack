@@ -1,14 +1,11 @@
 import { config } from "./config.js";
 
 
-function notify_slack(url) {
+function notify_slack(url, webHookUrl) {
     const payload = {
         text: `閲覧なう\n${url}`,
     };
-    const webHookUrl = config.webHookUrl;
-
     if (!webHookUrl) return;
-    
     try {
         fetch(webHookUrl, {
             method: "POST",
@@ -19,13 +16,11 @@ function notify_slack(url) {
         });
     } catch (error) {
         console.error("Error:", error);
-    };
+    }
 }
 
-function isNotInDenyList(url) {
-    const denyList = config.denyList;
+function isNotInDenyList(url, denyList) {
     if (!denyList) return true;
-
     for (const item of denyList) {
         if (url.includes(item)) {
             return false;
@@ -36,17 +31,19 @@ function isNotInDenyList(url) {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     chrome.tabs.query({ active: true, currentWindow: true })
-        .then(activeTab => {  
+        .then(async activeTab => {  
             switch (msg.name) {
                 case 'confirm':
                     const url = activeTab[0].url;
-                    if (isNotInDenyList(url)) {
+                    const denyList = await config.denyList();
+                    if (isNotInDenyList(url, denyList)) {
                         sendResponse({ url: url });
                         return;
                     }
                     break;
                 case 'notify_slack':
-                    notify_slack(msg.url);
+                    const webHookUrl = await config.webHookUrl();
+                    notify_slack(msg.url, webHookUrl);
                     break;
                 default:
                     break;
